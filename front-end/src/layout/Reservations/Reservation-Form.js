@@ -14,22 +14,24 @@ function ReservationForm() {
     const [formData, setFormData] = useState({ ...initialState });
     const history = useHistory();
     const handleChange = (e) => {
+        const value = e.target.name === "people" ? parseInt(e.target.value) : e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [e.target.name]: value,
         });
     };
 
     const handleCancel = () => {
-        history.push("/dashboard");
+        history.push(`/dashboard`);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         createReservation(formData)
-        .then( () => setFormData({ ...initialState }))
-        
+        .then( () => setFormData({ ...initialState }));
+        history.push(`/dashboard?date=${formData.reservation_date}`);
     };
+
     return (
         <form style={{ width: "50%" }} onSubmit={handleSubmit}>
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -53,7 +55,6 @@ function ReservationForm() {
                     Mobile number:
                     <input
                         name="mobile_number"
-                        pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"
                         placeholder="(123)-456-7890"
                         value={formData.mobile_number}
                         onChange={handleChange}
@@ -98,7 +99,7 @@ function ReservationForm() {
                 </label>
             </div>
             <div>
-                <button>Submit</button>
+                <button type="submit">Submit</button>
                 <button onClick={handleCancel}>Cancel</button>
             </div>
         </form>
