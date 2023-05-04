@@ -4,6 +4,48 @@
 const service = require("./reservations.service");
 const asyncErrorBoundry = require("../errors/asyncErrorBoundry");
 
+function asDateString(date) {
+    return `${date.getFullYear().toString(10)}-${(date.getMonth() + 1)
+        .toString(10)
+        .padStart(2, "0")}-${date.getDate().toString(10).padStart(2, "0")}`;
+}
+
+function notATuesday(req, res, next) {
+    const {
+        data: { reservation_date },
+    } = req.body;
+
+    let reservationDay = new Date(reservation_date.replace(/-/g, "/"));
+    if (reservationDay.getDay() === 2) {
+        next({
+            status: 400,
+            message: "Restaraunt is closed on Tuesdays",
+        });
+    }
+    next();
+}
+
+function futureDate(req, res, next) {
+    const today = new Date();
+    const date = asDateString(today);
+    const time =
+        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const {
+        data: { reservation_date, reservation_time },
+    } = req.body;
+
+    if (
+        new Date(reservation_date + " " + reservation_time) <
+        new Date(date + " " + time)
+    ) {
+        next({
+            status: 400,
+            message: "Date must be in the future",
+        });
+    }
+    next();
+}
+
 function bodyDataHas(propertyName) {
     return function (req, res, next) {
         const { data = {} } = req.body;
@@ -18,7 +60,6 @@ function partySizeIsValid(req, res, next) {
     const {
         data: { people },
     } = req.body;
-    console.log(people, typeof people)
     if (people <= 0 || !Number.isInteger(people)) {
         return next({
             status: 400,
@@ -106,6 +147,8 @@ module.exports = {
         dateIsValid,
         partySizeIsValid,
         timeIsValid,
+        notATuesday,
+        futureDate,
         asyncErrorBoundry(create),
     ],
 };
