@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { createReservation } from "../../utils/api";
 
-function ReservationForm({date}) {
+function ReservationForm({ date }) {
     const today = new Date();
-    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const time =
+        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const initialState = {
         first_name: "",
         last_name: "",
@@ -25,6 +26,8 @@ function ReservationForm({date}) {
             ...formData,
             [e.target.name]: value,
         });
+        document.getElementById("alert-Div").style.display = "none";
+        document.getElementById("alert-Div").classList.remove("alert-danger");
     };
 
     let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"));
@@ -44,15 +47,37 @@ function ReservationForm({date}) {
 
     return (
         <>
-            <div style={{"display":"none"}} id="alert-Div" className="alert alert-danger">Alert</div>
+            <div style={{ display: "none" }} id="alert-Div" className="alert">
+                Alert
+            </div>
             <form
                 style={{ width: "50%" }}
                 onSubmit={(e) => {
-                    if (reservationDay.getDay() === 2 || new Date(formData.reservation_date + " " + formData.reservation_time) < new Date(date + " " + time)) {
+                    if (
+                        reservationDay.getDay() === 2 ||
+                        new Date(
+                            formData.reservation_date +
+                                " " +
+                                formData.reservation_time
+                        ) < new Date(date + " " + time) ||
+                        new Date(
+                            formData.reservation_date +
+                                " " +
+                                formData.reservation_time
+                        ) < new Date(`${formData.reservation_date} 10:30:00`) ||
+                        new Date(
+                            formData.reservation_date +
+                                " " +
+                                formData.reservation_time
+                        ) > new Date(`${formData.reservation_date} 17:30:00`)
+                    ) {
                         e.preventDefault();
-                        document.getElementById("alert-Div").style.display = "block"
+                        document
+                            .getElementById("alert-Div")
+                            .classList.add("alert-danger");
+                        document.getElementById("alert-Div").style.display =
+                            "block";
                     } else {
-                        document.getElementById("alert-Div").style.display = "none"
                         handleSubmit(e);
                     }
                 }}
@@ -123,7 +148,9 @@ function ReservationForm({date}) {
                 </div>
                 <div>
                     <button type="submit">Submit</button>
-                    <button type="button" onClick={handleCancel}>Cancel</button>
+                    <button type="button" onClick={handleCancel}>
+                        Cancel
+                    </button>
                 </div>
             </form>
         </>

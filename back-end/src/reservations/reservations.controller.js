@@ -46,6 +46,21 @@ function futureDate(req, res, next) {
     next();
 }
 
+function inWorkingHours(req, res, next) {
+    const {
+        data: { reservation_date, reservation_time },
+    } = req.body;
+
+    if(new Date(reservation_date + " " + reservation_time) < new Date(reservation_date + " " + "10:30:00") ||
+    new Date(reservation_date + " " + reservation_time) > new Date(reservation_date + " " + "17:30:00")) {
+        next({
+            status: 400,
+            message: "Reservation time is outside of working hours"
+        })
+    }
+    next();
+}
+
 function bodyDataHas(propertyName) {
     return function (req, res, next) {
         const { data = {} } = req.body;
@@ -149,6 +164,7 @@ module.exports = {
         timeIsValid,
         notATuesday,
         futureDate,
+        inWorkingHours,
         asyncErrorBoundry(create),
     ],
 };
