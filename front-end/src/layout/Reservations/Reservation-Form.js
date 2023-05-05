@@ -89,6 +89,7 @@ function ReservationForm({ date }) {
                             name="first_name"
                             value={formData.first_name}
                             onChange={handleChange}
+                            required
                         />
                     </label>
                     <label>
@@ -97,6 +98,7 @@ function ReservationForm({ date }) {
                             name="last_name"
                             value={formData.last_name}
                             onChange={handleChange}
+                            required
                         />
                     </label>
                     <label>
@@ -106,6 +108,7 @@ function ReservationForm({ date }) {
                             placeholder="(123)-456-7890"
                             value={formData.mobile_number}
                             onChange={handleChange}
+                            required
                         />
                     </label>
                     <label>
@@ -118,6 +121,7 @@ function ReservationForm({ date }) {
                             pattern="\d{4}-\d{2}-\d{2}"
                             value={formData.reservation_date}
                             onChange={handleChange}
+                            required
                         />
                     </label>
                     <label>
@@ -130,6 +134,7 @@ function ReservationForm({ date }) {
                             pattern="[0-9]{2}:[0-9]{2}"
                             value={formData.reservation_time}
                             onChange={handleChange}
+                            required
                         />
                     </label>
                     <label>
@@ -143,6 +148,7 @@ function ReservationForm({ date }) {
                             min="1"
                             max="10"
                             style={{ width: "189px" }}
+                            required
                         />
                     </label>
                 </div>
