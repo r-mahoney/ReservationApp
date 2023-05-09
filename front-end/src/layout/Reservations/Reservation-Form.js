@@ -64,14 +64,15 @@ function ReservationForm({ date }) {
                             formData.reservation_date +
                                 " " +
                                 formData.reservation_time
-                        ) < new Date(`${formData.reservation_date} 10:30:00`) ||
+                        ) < new Date(`${formData.reservation_date} 10:30`) ||
                         new Date(
                             formData.reservation_date +
                                 " " +
                                 formData.reservation_time
-                        ) > new Date(`${formData.reservation_date} 17:30:00`)
+                        ) > new Date(`${formData.reservation_date} 21:30`)
                     ) {
                         e.preventDefault();
+                        console.log(formData.reservation_date, formData.reservation_time)
                         document
                             .getElementById("alert-Div")
                             .classList.add("alert-danger");

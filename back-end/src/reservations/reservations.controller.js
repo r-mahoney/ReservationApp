@@ -52,7 +52,7 @@ function inWorkingHours(req, res, next) {
     } = req.body;
 
     if(new Date(reservation_date + " " + reservation_time) < new Date(reservation_date + " " + "10:30:00") ||
-    new Date(reservation_date + " " + reservation_time) > new Date(reservation_date + " " + "17:30:00")) {
+    new Date(reservation_date + " " + reservation_time) > new Date(reservation_date + " " + "21:30:00")) {
         next({
             status: 400,
             message: "Reservation time is outside of working hours"
@@ -137,6 +137,20 @@ function timeIsValid(req, res, next) {
     next();
 }
 
+async function reservationExists(req, res, next) {
+    const reservation = await service.read(req.params.reservationId);
+
+    if(reservation) {
+        res.locals.reservation = reservation;
+        next();
+    } else {
+        next({
+            status: 404,
+            message: "Reservation can not be found"
+        })
+    }
+}
+
 async function list(req, res) {
     const { date } = req.query;
 
@@ -148,6 +162,11 @@ async function create(req, res) {
     await service.create(req.body.data);
 
     res.status(201).json({ data: req.body.data });
+}
+
+async function read(req, res, next) {
+    const { reservation : data } = res.locals;
+    res.json({data})
 }
 
 module.exports = {
@@ -167,4 +186,8 @@ module.exports = {
         inWorkingHours,
         asyncErrorBoundry(create),
     ],
+    read:[
+        reservationExists,
+        asyncErrorBoundry(read)
+    ]
 };

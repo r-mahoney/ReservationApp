@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationDisplay from "../layout/Reservations/Reservation-Display";
+import TableDisplay from "../layout/Tables/Table-Display";
 
 /**
  * Defines the dashboard page.
@@ -12,6 +13,7 @@ import ReservationDisplay from "../layout/Reservations/Reservation-Display";
 function Dashboard({ date }) {
     const [reservations, setReservations] = useState([]);
     const [reservationsError, setReservationsError] = useState(null);
+    const [tables, setTables] = useState([]);
     const queryParams = new URLSearchParams(window.location.search);
     const setDate = queryParams.get("date");
     const initialDate = setDate ? setDate : date;
@@ -40,6 +42,7 @@ function Dashboard({ date }) {
         listReservations({ date: queryDate }, abortController.signal)
             .then(setReservations)
             .catch(setReservationsError);
+        listTables(abortController.signal).then(setTables);
         return () => abortController.abort();
     }
 
@@ -53,25 +56,45 @@ function Dashboard({ date }) {
                 <h4 className="mb-0">Reservations for date {queryDate}</h4>
             </div>
             <ErrorAlert error={reservationsError} />
-            <table>
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Mobile Number</th>
-                        <th>Reservation Date</th>
-                        <th>Reservation Time</th>
-                        <th>Party Size</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {reservations.map((reservation) => (
-                        <tr key={reservation.reservation_id}>
-                            <ReservationDisplay reservation={reservation} />
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Mobile Number</th>
+                            <th>Reservation Date</th>
+                            <th>Reservation Time</th>
+                            <th>Party Size</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {reservations.map((reservation) => (
+                            <tr key={reservation.reservation_id}>
+                                <ReservationDisplay reservation={reservation} />
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Table Name</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tables.map((table) => (
+                            <tr key={table.table_id}>
+                                <TableDisplay table={table} />
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </main>
     );
 }
