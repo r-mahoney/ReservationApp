@@ -8,7 +8,10 @@ function list(date) {
 }
 
 function create(reservation) {
-    return knex("reservations").insert(reservation).returning("*");
+    return knex("reservations")
+        .insert(reservation)
+        .returning("*")
+        .then(data => data[0]);
 }
 
 function read(reservation_id) {

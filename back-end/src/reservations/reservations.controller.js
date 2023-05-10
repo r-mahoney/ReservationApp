@@ -138,7 +138,7 @@ function timeIsValid(req, res, next) {
 }
 
 async function reservationExists(req, res, next) {
-    const reservation = await service.read(req.params.reservationId);
+    const reservation = await service.read(Number(req.params.reservation_id));
 
     if(reservation) {
         res.locals.reservation = reservation;
@@ -146,7 +146,7 @@ async function reservationExists(req, res, next) {
     } else {
         next({
             status: 404,
-            message: "Reservation can not be found"
+            message: `${req.params.reservation_id} can not be found`
         })
     }
 }
@@ -159,9 +159,9 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-    await service.create(req.body.data);
+    const data = await service.create(req.body.data);
 
-    res.status(201).json({ data: req.body.data });
+    res.status(201).json({ data });
 }
 
 async function read(req, res, next) {
@@ -189,5 +189,5 @@ module.exports = {
     read:[
         reservationExists,
         asyncErrorBoundry(read)
-    ]
+    ],
 };

@@ -75,18 +75,18 @@ function View() {
                         <select name="table_id" onChange={handleChange}>
                             <option value="0">--Select A Table--</option>
                             {tables.map((table) => {
-                                if (table.table_status === "Free") {
+                                // if (table.table_status === "Free") {
                                     return (
                                         <option
                                             value={table.table_id}
                                             key={table.table_id}
                                         >
                                             {table.table_name} -{" "}
-                                            {table.table_capacity}
+                                            {table.capacity}
                                         </option>
                                     );
-                                }
-                                return null;
+                                // }
+                                // return null;
                             })}
                         </select>
                     </label>

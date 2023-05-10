@@ -72,7 +72,6 @@ function ReservationForm({ date }) {
                         ) > new Date(`${formData.reservation_date} 21:30`)
                     ) {
                         e.preventDefault();
-                        console.log(formData.reservation_date, formData.reservation_time)
                         document
                             .getElementById("alert-Div")
                             .classList.add("alert-danger");

@@ -5,21 +5,25 @@ import { createTable } from "../../utils/api";
 function TableForm() {
     const initialFormData = {
         table_name: "",
-        table_capacity: "",
+        capacity: "",
     };
 
     const [formData, setFormData] = useState({ ...initialFormData });
     const history = useHistory();
 
     const handleChange = (e) => {
+        const value =
+            e.target.name === "capacity"
+                ? parseInt(e.target.value)
+                : e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [e.target.name]: value,
         });
     };
 
     const handleCancel = () => {
-        history.push(`/dashboard`);
+        history.goBack()
     };
 
     const handleSubmit = (e) => {
@@ -45,8 +49,8 @@ function TableForm() {
                     <label>
                         Table Capacity
                         <input
-                            name="table_capacity"
-                            value={formData.table_capacity}
+                            name="capacity"
+                            value={formData.capacity}
                             onChange={handleChange}
                             required
                         ></input>

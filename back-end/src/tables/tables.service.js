@@ -10,10 +10,10 @@ function create(table) {
     return knex("tables")
         .insert(table)
         .returning("*")
+        .then(data => data[0])
 }
 
 function update(table) {
-    console.log(table)
     return knex("tables")
         .select("*")
         .where({table_id: table.table_id})
