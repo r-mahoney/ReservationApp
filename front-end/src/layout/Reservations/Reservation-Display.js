@@ -2,6 +2,7 @@ import React from "react";
 
 function ReservationDisplay({ reservation }) {
     const {
+        reservation_id,
         first_name,
         last_name,
         mobile_number,
@@ -17,6 +18,7 @@ function ReservationDisplay({ reservation }) {
             <th>{reservation_date}</th>
             <th>{reservation_time}</th>
             <th>{people}</th>
+            <th><button><a href={`/reservations/${reservation_id}/seat`} style={{"textDecoration":"none", "color":"black"}}>Seat</a></button></th>
         </>
     );
 }
