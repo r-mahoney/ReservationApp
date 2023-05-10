@@ -12,6 +12,8 @@ function View() {
     const [reservation, setReservation] = useState({});
     const [tables, setTables] = useState([]);
     const [tableId, setTableId] = useState();
+    const [table, setTable] = useState({});
+
     const {
         reservation_id,
         first_name,
@@ -24,12 +26,20 @@ function View() {
     const date = asDateString(new Date(reservation_date));
     const handleChange = (e) => {
         setTableId(e.target.value);
+        setTable({
+            ...tables.find(
+                (table) => table.table_id === Number(e.target.value)
+            ),
+        });
+        document.getElementById("alert-Div").style.display = "none";
+        document.getElementById("alert-Div").classList.remove("alert-danger");
+        document.getElementById("alert-Div").innerHTML = "";
     };
     const handleSubmit = (e) => {
         e.preventDefault();
         const abortController = new AbortController();
         seatTable(reservation_id, tableId, abortController.signal);
-        history.push("/dashboard")
+        history.push("/dashboard");
     };
     const handleCancel = (e) => {
         history.goBack();
@@ -46,6 +56,9 @@ function View() {
 
     return (
         <>
+            <div style={{ display: "none" }} id="alert-Div" className="alert">
+                Alert
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -69,24 +82,42 @@ function View() {
                 </tbody>
             </table>
             <div>
-                <form onSubmit={(e) => handleSubmit(e)}>
+                <form
+                    onSubmit={(e) => {
+                        if (table.table_status !== "Free") {
+                            e.preventDefault();
+                            document
+                                .getElementById("alert-Div")
+                                .classList.add("alert-danger");
+                            document.getElementById("alert-Div").style.display =
+                                "block";
+                            document.getElementById("alert-Div").innerHTML = "Table is occupied"
+                        } else if (people > table.capacity){
+                            e.preventDefault();
+                            document
+                                .getElementById("alert-Div")
+                                .classList.add("alert-danger");
+                            document.getElementById("alert-Div").style.display =
+                                "block";
+                            document.getElementById("alert-Div").innerHTML = "Party size is too big"
+                        } else {
+                            handleSubmit(e);
+                        }
+                    }}
+                >
                     <label>
                         Select a Table
                         <select name="table_id" onChange={handleChange}>
                             <option value="0">--Select A Table--</option>
                             {tables.map((table) => {
-                                // if (table.table_status === "Free") {
-                                    return (
-                                        <option
-                                            value={table.table_id}
-                                            key={table.table_id}
-                                        >
-                                            {table.table_name} -{" "}
-                                            {table.capacity}
-                                        </option>
-                                    );
-                                // }
-                                // return null;
+                                return (
+                                    <option
+                                        value={table.table_id}
+                                        key={table.table_id}
+                                    >
+                                        {table.table_name} - {table.capacity}
+                                    </option>
+                                );
                             })}
                         </select>
                     </label>
