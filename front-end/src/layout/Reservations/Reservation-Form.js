@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { createReservation } from "../../utils/api";
 
-function ReservationForm({ date }) {
+function ReservationForm({ date, loadDashboard }) {
     const today = new Date();
     const time =
         today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -39,6 +39,7 @@ function ReservationForm({ date }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         createReservation(formData)
+        .then(loadDashboard)
             .then(() => setFormData({ ...initialState }))
             .then(() =>
                 history.push(`/dashboard?date=${formData.reservation_date}`)

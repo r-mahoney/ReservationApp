@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { createTable } from "../../utils/api";
 
-function TableForm() {
+function TableForm({ loadDashboard }) {
     const initialFormData = {
         table_name: "",
         capacity: "",
@@ -23,19 +23,30 @@ function TableForm() {
     };
 
     const handleCancel = () => {
-        history.goBack()
+        history.goBack();
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         createTable(formData)
-            .then(() => setFormData({ ...initialFormData }))
-            .then(() => history.push(`/dashboard`));
+            .then(loadDashboard)
+            .then(() => setFormData({ ...initialFormData }));
+
+        history.push(`/dashboard`);
     };
 
     return (
         <>
-            <form onSubmit={handleSubmit} style={{ width: "50%" }}>
+            <form
+                onSubmit={(e) => {
+                    if(formData.table_name.length < 2 || isNaN(formData.capacity) || formData.capacity === 0) {
+                        e.preventDefault()
+                    } else {
+                        handleSubmit(e);
+                    }
+                }}
+                style={{ width: "50%" }}
+            >
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <label>
                         Table Name

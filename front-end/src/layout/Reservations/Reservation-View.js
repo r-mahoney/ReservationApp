@@ -6,7 +6,7 @@ import {
 import { readReservation, listTables, seatTable } from "../../utils/api";
 import { asDateString } from "../../utils/date-time";
 
-function View() {
+function View({loadDashboard}) {
     const history = useHistory();
     const { reservationId } = useParams();
     const [reservation, setReservation] = useState({});
@@ -38,7 +38,8 @@ function View() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const abortController = new AbortController();
-        seatTable(reservation_id, tableId, abortController.signal);
+        seatTable(reservation_id, tableId, abortController.signal)
+            .then(loadDashboard)
         history.push("/dashboard");
     };
     const handleCancel = (e) => {
