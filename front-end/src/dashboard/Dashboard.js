@@ -74,7 +74,7 @@ function Dashboard({
                     <tbody>
                         {tables.map((table) => (
                             <tr key={table.table_id}>
-                                <TableDisplay table={table}/>
+                                <TableDisplay table={table} loadDashboard={loadDashboard}/>
                             </tr>
                         ))}
                     </tbody>
