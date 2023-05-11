@@ -6,18 +6,18 @@ function TableDisplay({ table, loadDashboard }) {
     const history = useHistory();
     const { table_name, capacity, table_status, table_id } = table;
 
-    const handleFinish = (table_id) => {
+    const handleFinish = () => {
         const abortController = new AbortController();
 
         window.confirm(
             "Is this table ready to seat new guests? This cannot be undone."
         )
             ? deleteTable(table_id, abortController.signal)
-                  .then(listTables)
                   .then(loadDashboard)
                   .then(history.go())
             : console.log("nothing");
     };
+
     return (
         <>
             <td>{table_name}</td>
@@ -28,7 +28,7 @@ function TableDisplay({ table, loadDashboard }) {
                     <button
                         type="button"
                         data-table-id-finish={table_id}
-                        onClick={() => handleFinish(table_id)}
+                        onClick={handleFinish}
                     >
                         Finish
                     </button>

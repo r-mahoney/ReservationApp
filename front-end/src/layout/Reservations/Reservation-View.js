@@ -40,7 +40,7 @@ function View({loadDashboard}) {
         const abortController = new AbortController();
         seatTable(reservation_id, tableId, abortController.signal)
             .then(loadDashboard)
-        history.push("/dashboard");
+            .then(() => history.push("/dashboard"));
     };
     const handleCancel = (e) => {
         history.goBack();

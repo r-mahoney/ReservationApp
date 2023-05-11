@@ -56,7 +56,10 @@ function Dashboard({
                     <tbody>
                         {reservations.map((reservation) => (
                             <tr key={reservation.reservation_id}>
-                                <ReservationDisplay reservation={reservation} loadDashboard={loadDashboard}/>
+                                <ReservationDisplay
+                                    reservation={reservation}
+                                    loadDashboard={loadDashboard}
+                                />
                             </tr>
                         ))}
                     </tbody>
@@ -74,7 +77,10 @@ function Dashboard({
                     <tbody>
                         {tables.map((table) => (
                             <tr key={table.table_id}>
-                                <TableDisplay table={table} loadDashboard={loadDashboard}/>
+                                <TableDisplay
+                                    table={table}
+                                    loadDashboard={loadDashboard}
+                                />
                             </tr>
                         ))}
                     </tbody>

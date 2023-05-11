@@ -30,9 +30,8 @@ function TableForm({ loadDashboard }) {
         e.preventDefault();
         createTable(formData)
             .then(loadDashboard)
-            .then(() => setFormData({ ...initialFormData }));
-
-        history.push(`/dashboard`);
+            .then(() => setFormData({ ...initialFormData }))
+            .then(() => history.push(`/dashboard`));
     };
 
     return (

@@ -108,13 +108,11 @@ async function update(req, res, next) {
 async function create(req, res, next) {
     const table = req.body.data;
     if(table.reservation_id) {
-        await service.create({...req.body.data, table_status: "Occupied"});
-    } else {
-        await service.create(req.body.data);
+        req.body.data.table_status = "Occupied";
     }
-    
 
-    res.status(201).json({ data: req.body.data });
+    const data = await service.create(req.body.data)
+    res.status(201).json({ data });
 }
 
 async function destroy(req, res, next) {
@@ -131,7 +129,7 @@ async function destroy(req, res, next) {
 }
 
 module.exports = {
-    list,
+    list : [asyncErrorBoundry(list)],
     create: [
         bodyDataHas("table_name"),
         bodyDataHas("capacity"),
@@ -147,5 +145,6 @@ module.exports = {
     delete: [
         tableExists, 
         tableIsOccupied,
-        asyncErrorBoundry(destroy)],
+        asyncErrorBoundry(destroy)
+    ],
 };
