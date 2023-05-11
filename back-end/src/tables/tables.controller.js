@@ -54,9 +54,8 @@ function tableIsOccupied(req, res, next) {
             status: 400,
             message: "Table is not occupied",
         });
-    } else {
-        next();
     }
+    next();
 }
 
 async function tableExists(req, res, next) {
@@ -107,11 +106,11 @@ async function update(req, res, next) {
 
 async function create(req, res, next) {
     const table = req.body.data;
-    if(table.reservation_id) {
+    if (table.reservation_id) {
         req.body.data.table_status = "Occupied";
     }
 
-    const data = await service.create(req.body.data)
+    const data = await service.create(req.body.data);
     res.status(201).json({ data });
 }
 
@@ -124,12 +123,12 @@ async function destroy(req, res, next) {
         table_id: res.locals.table.table_id,
     };
 
-    await service.update(updatedTable);
-    res.sendStatus(200);
+    const data = await service.update(updatedTable);
+    res.status(200).json({ data });
 }
 
 module.exports = {
-    list : [asyncErrorBoundry(list)],
+    list: [asyncErrorBoundry(list)],
     create: [
         bodyDataHas("table_name"),
         bodyDataHas("capacity"),
@@ -142,9 +141,5 @@ module.exports = {
         tableExists,
         asyncErrorBoundry(update),
     ],
-    delete: [
-        tableExists, 
-        tableIsOccupied,
-        asyncErrorBoundry(destroy)
-    ],
+    delete: [tableExists, tableIsOccupied, asyncErrorBoundry(destroy)],
 };

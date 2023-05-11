@@ -14,7 +14,6 @@ function TableDisplay({ table, loadDashboard }) {
         )
             ? deleteTable(table_id, abortController.signal)
                   .then(loadDashboard)
-                  .then(history.go())
             : console.log("nothing");
     };
 
