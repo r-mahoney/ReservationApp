@@ -11,15 +11,26 @@ function ReservationDisplay({ reservation }) {
         people,
     } = reservation;
     return (
-        <>
-            <th>{first_name}</th>
-            <th>{last_name}</th>
-            <th>{mobile_number}</th>
-            <th>{reservation_date}</th>
-            <th>{reservation_time}</th>
-            <th>{people}</th>
-            <th><button><a href={`/reservations/${reservation_id}/seat`} style={{"textDecoration":"none", "color":"black"}}>Seat</a></button></th>
-        </>
+        reservation && (
+            <>
+                <td>{first_name}</td>
+                <td>{last_name}</td>
+                <td>{mobile_number}</td>
+                <td>{reservation_date}</td>
+                <td>{reservation_time}</td>
+                <td>{people}</td>
+                <td>
+                    <button>
+                        <a
+                            href={`/reservations/${reservation_id}/seat`}
+                            style={{ textDecoration: "none", color: "black" }}
+                        >
+                            Seat
+                        </a>
+                    </button>
+                </td>
+            </>
+        )
     );
 }
 
