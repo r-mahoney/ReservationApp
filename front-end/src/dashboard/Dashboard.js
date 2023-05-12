@@ -42,15 +42,17 @@ function Dashboard({
             </div>
             <ErrorAlert error={reservationsError} />
             <div>
-                <table>
-                    <thead>
+                <table className="table">
+                    <thead className="thead-light">
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Mobile Number</th>
-                            <th>Reservation Date</th>
-                            <th>Reservation Time</th>
-                            <th>Party Size</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Mobile Number</th>
+                            <th scope="col">Reservation Date</th>
+                            <th scope="col">Reservation Time</th>
+                            <th scope="col">Party Size</th>
+                            <th scope="col">Reservation Status</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,12 +68,13 @@ function Dashboard({
                 </table>
             </div>
             <div>
-                <table>
-                    <thead>
+                <table className="table">
+                    <thead className="thead-light">
                         <tr>
-                            <th>Table Name</th>
-                            <th>Capacity</th>
-                            <th>Status</th>
+                            <th scope="col">Table Name</th>
+                            <th scope="col">Capacity</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>

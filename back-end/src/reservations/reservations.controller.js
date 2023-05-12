@@ -51,12 +51,16 @@ function inWorkingHours(req, res, next) {
         data: { reservation_date, reservation_time },
     } = req.body;
 
-    if(new Date(reservation_date + " " + reservation_time) < new Date(reservation_date + " " + "10:30:00") ||
-    new Date(reservation_date + " " + reservation_time) > new Date(reservation_date + " " + "21:30:00")) {
+    if (
+        new Date(reservation_date + " " + reservation_time) <
+            new Date(reservation_date + " " + "10:30:00") ||
+        new Date(reservation_date + " " + reservation_time) >
+            new Date(reservation_date + " " + "21:30:00")
+    ) {
         next({
             status: 400,
-            message: "Reservation time is outside of working hours"
-        })
+            message: "Reservation time is outside of working hours",
+        });
     }
     next();
 }
@@ -137,36 +141,71 @@ function timeIsValid(req, res, next) {
     next();
 }
 
+function okStatus(req, res, next) {
+    let reservation = res.locals.reservation;
+    if (reservation.status === "finished") {
+        next({
+            status: 400,
+            message: "cannot update finished reservation",
+        });
+    }
+    if (req.body.data.status === "unknown") {
+        next({
+            status: 400,
+            message: "cannot update with unknown status",
+        });
+    }
+    next();
+}
 async function reservationExists(req, res, next) {
     const reservation = await service.read(Number(req.params.reservation_id));
 
-    if(reservation) {
+    if (reservation) {
         res.locals.reservation = reservation;
         next();
     } else {
         next({
             status: 404,
-            message: `${req.params.reservation_id} can not be found`
-        })
+            message: `${req.params.reservation_id} can not be found`,
+        });
     }
 }
 
 async function list(req, res) {
     const { date } = req.query;
 
-    const data = await service.list(date);
+    let data = await service.list(date);
+    data = data.filter(reservation => (reservation.status !== "finished"))
     res.json({ data });
 }
 
-async function create(req, res) {
+async function create(req, res, next) {
     const data = await service.create(req.body.data);
-
-    res.status(201).json({ data });
+    if (data.status !== "booked") {
+        next({
+            status: 400,
+            message: "Reservation can not start as finished or seated",
+        });
+    } else {
+        res.status(201).json({ data });
+    }
 }
 
 async function read(req, res, next) {
-    const { reservation : data } = res.locals;
-    res.json({data})
+    const { reservation: data } = res.locals;
+    res.status(200).json({ data });
+}
+
+async function update(req, res, next) {
+    const reservation = res.locals.reservation;
+
+    const updatedReservation = {
+        ...req.body.data,
+        reservation_id: reservation.reservation_id,
+    };
+
+    const data = await service.update(updatedReservation);
+    res.status(200).json({ data });
 }
 
 module.exports = {
@@ -186,8 +225,6 @@ module.exports = {
         inWorkingHours,
         asyncErrorBoundry(create),
     ],
-    read:[
-        reservationExists,
-        asyncErrorBoundry(read)
-    ],
+    read: [reservationExists, asyncErrorBoundry(read)],
+    update: [reservationExists, okStatus, asyncErrorBoundry(update)],
 };

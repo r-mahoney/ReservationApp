@@ -1,6 +1,9 @@
 const service = require("./tables.service");
 const asyncErrorBoundry = require("../errors/asyncErrorBoundry");
-const { read: resRead } = require("../reservations/reservations.service");
+const {
+    read: resRead,
+    update: resUpdate,
+} = require("../reservations/reservations.service");
 
 async function list(req, res, next) {
     const data = await service.list();
@@ -100,8 +103,18 @@ async function update(req, res, next) {
         table_status: "Occupied",
         table_id: res.locals.table.table_id,
     };
+
+    if (reservation.status === "seated") {
+        next({
+            status: 400,
+            message: "reservation is already seated",
+        });
+    } else {
+        reservation.status = "seated";
+        await resUpdate(reservation);
+    }
     const data = await service.update(updatedTable);
-    res.json({ data });
+    res.status(200).json({ data });
 }
 
 async function create(req, res, next) {
@@ -115,14 +128,16 @@ async function create(req, res, next) {
 }
 
 async function destroy(req, res, next) {
-    // const table = await service.read(res.locals.table.table_id);
+    const table = res.locals.table;
+    const reservation = await resRead(table.reservation_id);
+    reservation.status = "finished";
 
     const updatedTable = {
         ...req.body.data,
         table_status: "Free",
         table_id: res.locals.table.table_id,
     };
-
+    await resUpdate(reservation);
     const data = await service.update(updatedTable);
     res.status(200).json({ data });
 }

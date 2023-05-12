@@ -3,7 +3,7 @@ import {
     useHistory,
     useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
-import { readReservation, listTables, seatTable } from "../../utils/api";
+import { readReservation, updateReservation, listTables, seatTable } from "../../utils/api";
 import { asDateString } from "../../utils/date-time";
 
 function View({loadDashboard}) {
@@ -24,6 +24,7 @@ function View({loadDashboard}) {
         people,
     } = reservation;
     const date = asDateString(new Date(reservation_date));
+
     const handleChange = (e) => {
         setTableId(e.target.value);
         setTable({
@@ -35,16 +36,20 @@ function View({loadDashboard}) {
         document.getElementById("alert-Div").classList.remove("alert-danger");
         document.getElementById("alert-Div").innerHTML = "";
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const abortController = new AbortController();
         seatTable(reservation_id, tableId, abortController.signal)
-            .then(loadDashboard)
-            .then(() => history.push("/dashboard"));
+        .then(updateReservation(reservation_id, "seated", abortController.signal))
+        .then(loadDashboard)
+        .then(() => history.push("/dashboard"));
     };
+
     const handleCancel = (e) => {
         history.goBack();
     };
+
     useEffect(() => {
         const abortController = new AbortController();
         async function loadReservation() {
