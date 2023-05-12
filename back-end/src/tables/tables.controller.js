@@ -128,7 +128,8 @@ async function create(req, res, next) {
 }
 
 async function destroy(req, res, next) {
-    const reservation = await resRead(req.body.data.reservation_id);
+    const table = res.locals.table;
+    const reservation = await resRead(table.reservation_id);
     reservation.status = "finished";
 
     const updatedTable = {
