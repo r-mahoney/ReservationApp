@@ -39,7 +39,7 @@ function ReservationForm({ date, loadDashboard }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         createReservation(formData)
-        .then(loadDashboard)
+            .then(loadDashboard)
             .then(() => setFormData({ ...initialState }))
             .then(() =>
                 history.push(`/dashboard?date=${formData.reservation_date}`)
@@ -48,6 +48,7 @@ function ReservationForm({ date, loadDashboard }) {
 
     return (
         <>
+            <h1>Create a New Reservation</h1>
             <div style={{ display: "none" }} id="alert-Div" className="alert">
                 Alert
             </div>

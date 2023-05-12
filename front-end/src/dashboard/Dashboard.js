@@ -61,6 +61,7 @@ function Dashboard({
                                 <ReservationDisplay
                                     reservation={reservation}
                                     loadDashboard={loadDashboard}
+                                    resSearch={false}
                                 />
                             </tr>
                         ))}
