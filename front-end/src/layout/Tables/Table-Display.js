@@ -1,10 +1,8 @@
 import React from "react";
-import { deleteTable, listTables } from "../../utils/api";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { deleteTable, updateReservation } from "../../utils/api";
 
 function TableDisplay({ table, loadDashboard }) {
-    const history = useHistory();
-    const { table_name, capacity, table_status, table_id } = table;
+    const { table_name, capacity, table_status, table_id, reservation_id } = table;
 
     const handleFinish = () => {
         const abortController = new AbortController();
@@ -13,7 +11,8 @@ function TableDisplay({ table, loadDashboard }) {
             "Is this table ready to seat new guests? This cannot be undone."
         )
             ? deleteTable(table_id, abortController.signal)
-                  .then(loadDashboard)
+            .then(updateReservation(reservation_id, "finished", abortController.signal))
+            .then(loadDashboard)
             : console.log("nothing");
     };
 

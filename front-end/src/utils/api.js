@@ -123,3 +123,16 @@ export async function deleteTable(table_id, signal) {
     }
     return await fetchJson(url, options, {})
 }
+
+export async function updateReservation(reservation_id, status,  signal){
+    const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+
+    const options = {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({data: {status}}),
+        signal
+    }
+    
+    return await fetchJson(url, options, {})
+}
