@@ -172,10 +172,16 @@ async function reservationExists(req, res, next) {
 }
 
 async function list(req, res) {
-    const { date } = req.query;
+    let data;
+    if (req.query.date) {
+        const { date } = req.query;
+        data = await service.list(date);
+        data = data.filter((reservation) => reservation.status !== "finished");
+    } else if(req.query.mobile_number){
+        const {mobile_number} = req.query;
+        data = await service.search(mobile_number)
 
-    let data = await service.list(date);
-    data = data.filter(reservation => (reservation.status !== "finished"))
+    }
     res.json({ data });
 }
 

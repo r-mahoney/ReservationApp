@@ -36,10 +36,15 @@ function TableForm({ loadDashboard }) {
 
     return (
         <>
+            <h1>Create a New Table</h1>
             <form
                 onSubmit={(e) => {
-                    if(formData.table_name.length < 2 || isNaN(formData.capacity) || formData.capacity === 0) {
-                        e.preventDefault()
+                    if (
+                        formData.table_name.length < 2 ||
+                        isNaN(formData.capacity) ||
+                        formData.capacity === 0
+                    ) {
+                        e.preventDefault();
                     } else {
                         handleSubmit(e);
                     }

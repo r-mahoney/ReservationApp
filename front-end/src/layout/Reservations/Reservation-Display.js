@@ -1,6 +1,6 @@
 import React from "react";
 
-function ReservationDisplay({ reservation }) {
+function ReservationDisplay({ reservation, resSearch }) {
     const {
         reservation_id,
         first_name,
@@ -21,7 +21,7 @@ function ReservationDisplay({ reservation }) {
             <td>{people}</td>
             <td data-reservation-id-status={reservation_id}>{status}</td>
             <td>
-                {status === "booked" && (
+                {status === "booked" && !resSearch && (
                     <button>
                         <a
                             href={`/reservations/${reservation_id}/seat`}
