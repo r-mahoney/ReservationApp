@@ -58,6 +58,8 @@ function View({loadDashboard}) {
         }
         loadReservation();
         listTables(abortController.signal).then(setTables);
+
+        return () => abortController.abort();
     }, [reservationId]);
 
     return (
