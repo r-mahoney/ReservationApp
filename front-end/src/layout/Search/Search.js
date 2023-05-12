@@ -70,6 +70,7 @@ function Search() {
                             <th scope="col">Reservation Time</th>
                             <th scope="col">Party Size</th>
                             <th scope="col">Reservation Status</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>

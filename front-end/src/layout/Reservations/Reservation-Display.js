@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function ReservationDisplay({ reservation, resSearch }) {
     const {
@@ -23,18 +24,39 @@ function ReservationDisplay({ reservation, resSearch }) {
             <td>
                 {status === "booked" && !resSearch && (
                     <button>
-                        <a
-                            href={`/reservations/${reservation_id}/seat`}
+                        <Link to={`/reservations/${reservation_id}/seat`}
+                        style={{
+                            textDecoration: "none",
+                            color: "black",
+                        }}
+                        >Seat</Link>
+                        {/* <a
+                            href={}
                             style={{
                                 textDecoration: "none",
                                 color: "black",
                             }}
                         >
                             Seat
-                        </a>
+                        </a> */}
                     </button>
                 )}
             </td>
+            {/* <td>
+                {resSearch && (
+                    <button>
+                        <a
+                            href={`/reservations/${reservation_id}/edit`}
+                            style={{
+                                textDecoration: "none",
+                                color: "black",
+                            }}
+                        >
+                            Edit
+                        </a>
+                    </button>
+                )}
+            </td> */}
         </>
     );
 }
