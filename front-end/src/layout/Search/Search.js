@@ -10,8 +10,8 @@ function Search() {
     const [formData, setFormData] = useState({ ...initialFormData });
     const [foundReservations, setfoundReservations] = useState({});
     const [changed, setChanged] = useState(false);
-    const handleSubmit = (e) => {
-        e.preventDefault();
+
+    function loadSearchResults() {
         const abortController = new AbortController();
         listReservations(
             { mobile_number: formData.mobile_number },
@@ -21,7 +21,11 @@ function Search() {
             .then(formatReservationDate)
             .then(setfoundReservations)
             .then(setChanged(true));
-        setFormData({ ...initialFormData });
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        loadSearchResults()
+        // setFormData({ ...initialFormData });
     };
     const handleChange = (e) => {
         setFormData({
@@ -80,6 +84,7 @@ function Search() {
                                     <ReservationDisplay
                                         reservation={reservation}
                                         resSearch={true}
+                                        loadSearchResults={loadSearchResults}
                                     />
                                 </tr>
                             ))}

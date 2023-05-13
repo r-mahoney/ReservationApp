@@ -1,5 +1,5 @@
 import React from "react";
-import { deleteTable, updateReservation } from "../../utils/api";
+import { deleteTable, updateStatus } from "../../utils/api";
 
 function TableDisplay({ table, loadDashboard }) {
     const { table_name, capacity, table_status, table_id, reservation_id } = table;
@@ -11,7 +11,7 @@ function TableDisplay({ table, loadDashboard }) {
             "Is this table ready to seat new guests? This cannot be undone."
         )
             ? deleteTable(table_id, abortController.signal)
-            .then(updateReservation(reservation_id, "finished", abortController.signal))
+            .then(updateStatus(reservation_id, "finished", abortController.signal))
             .then(loadDashboard)
             : console.log("nothing");
     };
