@@ -44,7 +44,7 @@ function Form({reservation, date, loadDashboard}) {
         document.getElementById("alert-Div").classList.remove("alert-danger");
     };
 
-    // let reservationDay = !isLoading ? new Date(formData.reservation_date.replace(/-/g, "/")) : null;
+    let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"))
 
     const handleCancel = () => {
         history.push(`/dashboard`);
@@ -66,7 +66,7 @@ function Form({reservation, date, loadDashboard}) {
             style={{ width: "50%" }}
             onSubmit={(e) => {
                 if (
-                    // reservationDay.getDay() === 2 ||
+                    reservationDay.getDay() === 2 ||
                     new Date(
                         formData.reservation_date +
                             " " +
@@ -94,41 +94,49 @@ function Form({reservation, date, loadDashboard}) {
                 }
             }}
         >
-            <div style={{ display: "flex", flexDirection: "column" }}>
-                <label>
+            <div 
+            style={{ display: "flex", flexDirection: "column" }}
+            className="form-group"
+            >
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                     First name:
                     <input
                         name="first_name"
+                        style={{ width: "50%" }}
+                        placeholder="First"
                         value={formData.first_name}
                         onChange={handleChange}
                         required
                     />
                 </label>
-                <label>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                     Last name:
                     <input
                         name="last_name"
+                        style={{ width: "50%" }}
                         value={formData.last_name}
                         onChange={handleChange}
+                        placeholder="Last"
                         required
                     />
                 </label>
-                <label>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                     Mobile number:
                     <input
                         name="mobile_number"
                         placeholder="(123)-456-7890"
+                        style={{ width: "50%" }}
                         value={formData.mobile_number}
                         onChange={handleChange}
                         required
                     />
                 </label>
-                <label>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                     Date of reservation:
                     <input
                         type="date"
                         name="reservation_date"
-                        style={{ width: "189px" }}
+                        style={{ width: "50%" }}
                         placeholder="YYYY-MM-DD"
                         pattern="\d{4}-\d{2}-\d{2}"
                         value={formData.reservation_date}
@@ -136,12 +144,12 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                     Time of reservation:
                     <input
                         type="time"
                         name="reservation_time"
-                        style={{ width: "189px" }}
+                        style={{ width: "50%" }}
                         placeholder="HH:MM"
                         pattern="[0-9]{2}:[0-9]{2}"
                         value={formData.reservation_time}
@@ -149,7 +157,7 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                     Size of party:
                     <input
                         type="number"
@@ -159,7 +167,7 @@ function Form({reservation, date, loadDashboard}) {
                         value={formData.people}
                         min="1"
                         max="10"
-                        style={{ width: "189px" }}
+                        style={{ width: "50%" }}
                         required
                     />
                 </label>

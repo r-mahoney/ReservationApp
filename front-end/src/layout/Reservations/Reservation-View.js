@@ -116,7 +116,7 @@ function View({loadDashboard}) {
                     <label>
                         Select a Table
                         <select name="table_id" onChange={handleChange}>
-                            <option value="0">--Select A Table--</option>
+                            <option value="">--Select A Table--</option>
                             {tables.map((table) => {
                                 return (
                                     <option

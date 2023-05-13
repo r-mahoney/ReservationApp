@@ -26,7 +26,7 @@ function ReservationForm({ date, loadDashboard }) {
 
     return (
         <>
-            <h1>Create a New Reservation</h1>
+            {path.includes("edit") ? <h1>Edit a Reservation</h1>:<h1>Create a New Reservation</h1>}
             <div style={{ display: "none" }} id="alert-Div" className="alert">
                 Alert
             </div>

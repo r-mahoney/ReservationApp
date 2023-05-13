@@ -45,9 +45,9 @@ function Search() {
                     No reservations found
                 </div>}
                 <form onSubmit={handleSubmit}>
-                    <label style={{ display: "block", width: "100%" }}>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                         Search for Reservation
-                        <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ display: "flex", flexDirection: "row", "width":"50%"}}>
                             <input
                                 type="text"
                                 name="mobile_number"
