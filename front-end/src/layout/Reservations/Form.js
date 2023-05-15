@@ -43,6 +43,7 @@ function Form({ reservation, date, loadDashboard }) {
         });
         document.getElementById("alert-Div").style.display = "none";
         document.getElementById("alert-Div").classList.remove("alert-danger");
+        document.getElementById("alert-Div").innerHTML = "";
     };
 
     let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"));
@@ -105,6 +106,8 @@ function Form({ reservation, date, loadDashboard }) {
                         .classList.add("alert-danger");
                     document.getElementById("alert-Div").style.display =
                         "block";
+                    document.getElementById("alert-Div").innerHTML =
+                        "Cannot set reservation";
                 } else {
                     handleSubmit(e);
                 }
