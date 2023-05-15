@@ -179,6 +179,7 @@ describe("US-04 - Seat reservation - E2E", () => {
 
       await selectOptionByText(page, "table_id", "#1 - 6");
 
+
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-submit-before.png",
         fullPage: true,

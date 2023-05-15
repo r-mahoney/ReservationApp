@@ -1,6 +1,13 @@
 import React from "react";
+import { Link, useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
+import { update } from "../../utils/api";
 
-function ReservationDisplay({ reservation, resSearch }) {
+function ReservationDisplay({
+    reservation,
+    resSearch,
+    loadSearchResults,
+    loadDashboard,
+}) {
     const {
         reservation_id,
         first_name,
@@ -11,6 +18,21 @@ function ReservationDisplay({ reservation, resSearch }) {
         people,
         status,
     } = reservation;
+    const { path } = useRouteMatch();
+    const handleCancel = () => {
+        const abortController = new AbortController();
+        return window.confirm(
+            "Do you want to cancel this reservation? This cannot be undone."
+        )
+            ? update(
+                  reservation,
+                  "cancelled",
+                  abortController.signal
+              ).then(() => {
+                  path.includes("edit") ? loadSearchResults() : loadDashboard();
+              })
+            : null;
+    };
     return (
         <>
             <td>{first_name}</td>
@@ -20,18 +42,40 @@ function ReservationDisplay({ reservation, resSearch }) {
             <td>{reservation_time}</td>
             <td>{people}</td>
             <td data-reservation-id-status={reservation_id}>{status}</td>
+
             <td>
                 {status === "booked" && !resSearch && (
                     <button>
-                        <a
-                            href={`/reservations/${reservation_id}/seat`}
+                        <Link
+                            to={`/reservations/${reservation_id}/seat`}
                             style={{
                                 textDecoration: "none",
                                 color: "black",
                             }}
                         >
                             Seat
-                        </a>
+                        </Link>
+                    </button>
+                )}
+                {status === "booked" && (
+                    <button>
+                        <Link
+                            to={`/reservations/${reservation_id}/edit`}
+                            style={{
+                                textDecoration: "none",
+                                color: "black",
+                            }}
+                        >
+                            Edit
+                        </Link>
+                    </button>
+                )}
+                {reservation.status !== "cancelled" && (
+                    <button
+                        data-reservation-id-cancel={`${reservation_id}`}
+                        onClick={handleCancel}
+                    >
+                        Cancel
                     </button>
                 )}
             </td>

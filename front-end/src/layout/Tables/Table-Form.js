@@ -52,19 +52,23 @@ function TableForm({ loadDashboard }) {
                 style={{ width: "50%" }}
             >
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                    <label>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                         Table Name
                         <input
                             name="table_name"
+                            style={{ width: "50%" }}
                             value={formData.table_name}
                             onChange={handleChange}
+                            placeholder="Table Name"
                             required
                         ></input>
                     </label>
-                    <label>
+                    <label style={{"display":"flex", "flexDirection":"column"}}>
                         Table Capacity
                         <input
                             name="capacity"
+                            style={{ width: "50%" }}
+                            placeholder="Table Capacity"
                             value={formData.capacity}
                             onChange={handleChange}
                             required

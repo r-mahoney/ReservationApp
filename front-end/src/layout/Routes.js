@@ -55,8 +55,12 @@ function Routes() {
                 <ReservationForm date={today()} loadDashboard={loadDashboard} />
             </Route>
 
+            <Route exact={true} path="/reservations/:reservationId/edit">
+                <ReservationForm edit={true} reservations={reservations} loadDashboard={loadDashboard}/>
+            </Route>
+
             <Route exact={true} path="/reservations/:reservationId/seat">
-                <View loadDashboard={loadDashboard} />
+                <View loadDashboard={loadDashboard} tables={tables} reservations={reservations} />
             </Route>
 
             <Route exact={true} path="/tables/new">
@@ -74,10 +78,7 @@ function Routes() {
             </Route>
 
             <Route path="/search">
-                <Search
-                    loadDashboard={loadDashboard}
-                    reservations={reservations}
-                />
+                <Search />
             </Route>
 
             <Route>

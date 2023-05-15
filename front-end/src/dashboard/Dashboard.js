@@ -28,7 +28,7 @@ function Dashboard({
     }
 
     return (
-        <main>
+        <main className="container-fluid">
             <h1>Dashboard</h1>
             <button onClick={handlePrev}>Previous Day</button>
             <button
@@ -83,6 +83,7 @@ function Dashboard({
                             <tr key={table.table_id}>
                                 <TableDisplay
                                     table={table}
+                                    reservations={reservations}
                                     loadDashboard={loadDashboard}
                                 />
                             </tr>

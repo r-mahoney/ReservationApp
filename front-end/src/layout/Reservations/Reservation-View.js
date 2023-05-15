@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { 
+    useEffect, 
+    useState } from "react";
 import {
     useHistory,
     useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
-import { readReservation, updateReservation, listTables, seatTable } from "../../utils/api";
+import { 
+    readReservation, 
+    update, seatTable } from "../../utils/api";
 import { asDateString } from "../../utils/date-time";
 
-function View({loadDashboard}) {
+function View({loadDashboard, tables, reservations}) {
     const history = useHistory();
     const { reservationId } = useParams();
     const [reservation, setReservation] = useState({});
-    const [tables, setTables] = useState([]);
+    // const reservation  = reservations.find(reservation => reservation.reservation_id === Number(reservationId))
     const [tableId, setTableId] = useState();
     const [table, setTable] = useState({});
 
@@ -41,7 +45,7 @@ function View({loadDashboard}) {
         e.preventDefault();
         const abortController = new AbortController();
         seatTable(reservation_id, tableId, abortController.signal)
-        .then(updateReservation(reservation_id, "seated", abortController.signal))
+        .then(update(reservation, "seated", abortController.signal))
         .then(loadDashboard)
         .then(() => history.push("/dashboard"));
     };
@@ -57,7 +61,6 @@ function View({loadDashboard}) {
             setReservation({ ...data });
         }
         loadReservation();
-        listTables(abortController.signal).then(setTables);
 
         return () => abortController.abort();
     }, [reservationId]);
@@ -116,7 +119,7 @@ function View({loadDashboard}) {
                     <label>
                         Select a Table
                         <select name="table_id" onChange={handleChange}>
-                            <option value="0">--Select A Table--</option>
+                            <option value="">--Select A Table--</option>
                             {tables.map((table) => {
                                 return (
                                     <option

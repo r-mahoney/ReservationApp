@@ -18,6 +18,7 @@ function update(table) {
         .select("*")
         .where({table_id: table.table_id})
         .update(table, "*")
+        .then(updated => updated[0])
 }
 
 function read(table_id) {

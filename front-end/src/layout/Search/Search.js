@@ -10,8 +10,8 @@ function Search() {
     const [formData, setFormData] = useState({ ...initialFormData });
     const [foundReservations, setfoundReservations] = useState({});
     const [changed, setChanged] = useState(false);
-    const handleSubmit = (e) => {
-        e.preventDefault();
+
+    function loadSearchResults() {
         const abortController = new AbortController();
         listReservations(
             { mobile_number: formData.mobile_number },
@@ -21,7 +21,11 @@ function Search() {
             .then(formatReservationDate)
             .then(setfoundReservations)
             .then(setChanged(true));
-        setFormData({ ...initialFormData });
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        loadSearchResults()
+        // setFormData({ ...initialFormData });
     };
     const handleChange = (e) => {
         setFormData({
@@ -41,9 +45,9 @@ function Search() {
                     No reservations found
                 </div>}
                 <form onSubmit={handleSubmit}>
-                    <label style={{ display: "block", width: "100%" }}>
+                <label style={{"display":"flex", "flexDirection":"column"}}>
                         Search for Reservation
-                        <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ display: "flex", flexDirection: "row", "width":"50%"}}>
                             <input
                                 type="text"
                                 name="mobile_number"
@@ -70,6 +74,7 @@ function Search() {
                             <th scope="col">Reservation Time</th>
                             <th scope="col">Party Size</th>
                             <th scope="col">Reservation Status</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,6 +84,7 @@ function Search() {
                                     <ReservationDisplay
                                         reservation={reservation}
                                         resSearch={true}
+                                        loadSearchResults={loadSearchResults}
                                     />
                                 </tr>
                             ))}
