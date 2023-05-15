@@ -170,29 +170,37 @@ describe("US-04 - Seat reservation - E2E", () => {
     });
 
     test("seating reservation at table #1 makes the table occupied", async () => {
+      console.log("initial")
       await page.waitForSelector('option:not([value=""])');
+      console.log("selector")
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-start.png",
         fullPage: true,
       });
+      console.log("screenshot")
 
       await selectOptionByText(page, "table_id", "#1 - 6");
+
+      console.log('text')
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-submit-before.png",
         fullPage: true,
       });
+      console.log("screenshot2")
 
       await Promise.all([
         page.click("[type=submit]"),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
+      console.log("submit Promise.all")
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-submit-after.png",
         fullPage: true,
       });
+      console.log("screenshot")
 
       expect(page.url()).toContain("/dashboard");
       expect(page).toMatch(/occupied/i);

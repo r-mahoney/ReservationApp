@@ -128,13 +128,19 @@ export async function deleteTable(table_id, signal) {
     return await fetchJson(url, options, {});
 }
 
-export async function updateStatus(reservation_id, status, signal) {
-    const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+export async function update(reservation, status, signal) {
+    const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}/status`;
 
-    const options = {
+    const options = status !== "booked" ? {
         method: "PUT",
         headers,
         body: JSON.stringify({ data: { status } }),
+        signal,
+    } : 
+    {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ data: reservation }),
         signal,
     };
 

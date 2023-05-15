@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { createReservation } from "../../utils/api";
+import { createReservation, update } from "../../utils/api";
 import {
     useHistory,
     useRouteMatch,
 } from "react-router-dom/cjs/react-router-dom.min";
 
-function Form({reservation, date, loadDashboard}) {
+function Form({ reservation, date, loadDashboard }) {
     const today = new Date();
     const { path } = useRouteMatch();
     const time =
@@ -15,7 +15,8 @@ function Form({reservation, date, loadDashboard}) {
               first_name: reservation.first_name,
               last_name: reservation.last_name,
               mobile_number: reservation.mobile_number,
-              reservation_date: reservation.reservation_date.match(/\d\d\d\d-\d\d-\d\d/)[0],
+              reservation_date:
+                  reservation.reservation_date.match(/\d\d\d\d-\d\d-\d\d/)[0],
               reservation_time: reservation.reservation_time,
               people: reservation.people,
           }
@@ -44,7 +45,7 @@ function Form({reservation, date, loadDashboard}) {
         document.getElementById("alert-Div").classList.remove("alert-danger");
     };
 
-    let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"))
+    let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"));
 
     const handleCancel = () => {
         history.push(`/dashboard`);
@@ -52,14 +53,29 @@ function Form({reservation, date, loadDashboard}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        path.includes("edit") 
-        ? console.log("editing")
-        : createReservation(formData)
-            .then(loadDashboard)
-            .then(() => setFormData({ ...initialState }))
-            .then(() =>
-                history.push(`/dashboard?date=${formData.reservation_date}`)
-            );
+        const abortController = new AbortController();
+
+        path.includes("edit")
+            ? update(
+                  { ...reservation, ...formData },
+                  "booked",
+                  abortController.signal
+              )
+                  .then(loadDashboard)
+                  .then(() => setFormData({ ...initialState }))
+                  .then(() =>
+                      history.push(
+                          `/dashboard?date=${formData.reservation_date}`
+                      )
+                  )
+            : createReservation(formData, abortController.signal)
+                  .then(loadDashboard)
+                  .then(() => setFormData({ ...initialState }))
+                  .then(() =>
+                      history.push(
+                          `/dashboard?date=${formData.reservation_date}`
+                      )
+                  );
     };
     return (
         <form
@@ -94,11 +110,11 @@ function Form({reservation, date, loadDashboard}) {
                 }
             }}
         >
-            <div 
-            style={{ display: "flex", flexDirection: "column" }}
-            className="form-group"
+            <div
+                style={{ display: "flex", flexDirection: "column" }}
+                className="form-group"
             >
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                <label style={{ display: "flex", flexDirection: "column" }}>
                     First name:
                     <input
                         name="first_name"
@@ -109,7 +125,7 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                <label style={{ display: "flex", flexDirection: "column" }}>
                     Last name:
                     <input
                         name="last_name"
@@ -120,7 +136,7 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                <label style={{ display: "flex", flexDirection: "column" }}>
                     Mobile number:
                     <input
                         name="mobile_number"
@@ -131,7 +147,7 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                <label style={{ display: "flex", flexDirection: "column" }}>
                     Date of reservation:
                     <input
                         type="date"
@@ -144,7 +160,7 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                <label style={{ display: "flex", flexDirection: "column" }}>
                     Time of reservation:
                     <input
                         type="time"
@@ -157,7 +173,7 @@ function Form({reservation, date, loadDashboard}) {
                         required
                     />
                 </label>
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                <label style={{ display: "flex", flexDirection: "column" }}>
                     Size of party:
                     <input
                         type="number"

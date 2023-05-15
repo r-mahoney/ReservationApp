@@ -31,12 +31,13 @@ function futureDate(req, res, next) {
     const time =
         today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const {
-        data: { reservation_date, reservation_time },
+        data: { reservation_date, reservation_time, status },
     } = req.body;
 
     if (
+        !status &&
         new Date(reservation_date + " " + reservation_time) <
-        new Date(date + " " + time)
+            new Date(date + " " + time)
     ) {
         next({
             status: 400,
@@ -177,10 +178,9 @@ async function list(req, res) {
         const { date } = req.query;
         data = await service.list(date);
         data = data.filter((reservation) => reservation.status !== "finished");
-    } else if(req.query.mobile_number){
-        const {mobile_number} = req.query;
-        data = await service.search(mobile_number)
-
+    } else if (req.query.mobile_number) {
+        const { mobile_number } = req.query;
+        data = await service.search(mobile_number);
     }
     res.json({ data });
 }
@@ -201,6 +201,19 @@ async function read(req, res, next) {
     const { reservation: data } = res.locals;
     res.status(200).json({ data });
 }
+
+// async function update(req, res, next) {
+//     const reservation = res.locals.reservation;
+
+//     const updatedReservation = {
+//         ...reservation,
+//         ...req.body.data,
+//     };
+//     const data = await service.update(updatedReservation);
+//     console.log(data)
+
+//     res.status(200).json({ data });
+// }
 
 async function update(req, res, next) {
     const reservation = res.locals.reservation;
@@ -233,4 +246,11 @@ module.exports = {
     ],
     read: [reservationExists, asyncErrorBoundry(read)],
     update: [reservationExists, okStatus, asyncErrorBoundry(update)],
+    bodyDataHas,
+    dateIsValid,
+    partySizeIsValid,
+    timeIsValid,
+    notATuesday,
+    futureDate,
+    inWorkingHours,
 };

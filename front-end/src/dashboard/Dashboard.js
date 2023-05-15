@@ -83,6 +83,7 @@ function Dashboard({
                             <tr key={table.table_id}>
                                 <TableDisplay
                                     table={table}
+                                    reservations={reservations}
                                     loadDashboard={loadDashboard}
                                 />
                             </tr>

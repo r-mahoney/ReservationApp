@@ -1,8 +1,13 @@
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
-import { updateStatus } from "../../utils/api";
+import { update } from "../../utils/api";
 
-function ReservationDisplay({ reservation, resSearch, loadSearchResults, loadDashboard }) {
+function ReservationDisplay({
+    reservation,
+    resSearch,
+    loadSearchResults,
+    loadDashboard,
+}) {
     const {
         reservation_id,
         first_name,
@@ -19,12 +24,12 @@ function ReservationDisplay({ reservation, resSearch, loadSearchResults, loadDas
         return window.confirm(
             "Do you want to cancel this reservation? This cannot be undone."
         )
-            ? updateStatus(
-                  reservation_id,
+            ? update(
+                  reservation,
                   "cancelled",
                   abortController.signal
               ).then(() => {
-                path.includes("edit") ? loadSearchResults() : loadDashboard()
+                  path.includes("edit") ? loadSearchResults() : loadDashboard();
               })
             : null;
     };
@@ -52,17 +57,19 @@ function ReservationDisplay({ reservation, resSearch, loadSearchResults, loadDas
                         </Link>
                     </button>
                 )}
-                <button>
-                    <Link
-                        to={`/reservations/${reservation_id}/edit`}
-                        style={{
-                            textDecoration: "none",
-                            color: "black",
-                        }}
-                    >
-                        Edit
-                    </Link>
-                </button>
+                {status === "booked" && (
+                    <button>
+                        <Link
+                            to={`/reservations/${reservation_id}/edit`}
+                            style={{
+                                textDecoration: "none",
+                                color: "black",
+                            }}
+                        >
+                            Edit
+                        </Link>
+                    </button>
+                )}
                 {reservation.status !== "cancelled" && (
                     <button
                         data-reservation-id-cancel={`${reservation_id}`}
