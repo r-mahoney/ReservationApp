@@ -77,7 +77,7 @@ async function tableExists(req, res, next) {
 
 async function update(req, res, next) {
     const reservation = await resRead(req.body.data.reservation_id);
-    const table = await service.read(res.locals.table.table_id);
+    const table = res.locals.table;
 
     if (!reservation) {
         next({
