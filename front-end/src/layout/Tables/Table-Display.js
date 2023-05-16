@@ -6,7 +6,7 @@ function TableDisplay({ table, loadDashboard , reservations }) {
     
     const handleFinish = () => {
         const abortController = new AbortController();
-        const reservation = reservations.find(reservation => reservation.reservation_id === table.reservation_id)
+        const reservation = reservations.find(reservation => reservation.reservation_id === Number(table.reservation_id))
         
         window.confirm(
             "Is this table ready to seat new guests? This cannot be undone."

@@ -47,7 +47,7 @@ function View({loadDashboard, tables, reservations}) {
         seatTable(reservation_id, tableId, abortController.signal)
         .then(update(reservation, "seated", abortController.signal))
         .then(loadDashboard)
-        .then(() => history.push("/dashboard"));
+        .then(() => history.push(`/dashboard?date=${reservation_date}`));
     };
 
     const handleCancel = (e) => {
