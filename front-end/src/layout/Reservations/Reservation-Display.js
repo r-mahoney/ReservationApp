@@ -44,40 +44,45 @@ function ReservationDisplay({
             <td data-reservation-id-status={reservation_id}>{status}</td>
 
             <td>
-                {status === "booked" && !resSearch && (
-                    <button>
-                        <Link
-                            to={`/reservations/${reservation_id}/seat`}
-                            style={{
-                                textDecoration: "none",
-                                color: "black",
-                            }}
+                <div style={{display:"flex", flexDirection:"column"}}>
+                    {status === "booked" && !resSearch && (
+                        <button
+                            className="btn btn-sm btn-primary">
+                            <Link
+                                to={`/reservations/${reservation_id}/seat`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "black",
+                                }}
+                            >
+                                Seat
+                            </Link>
+                        </button>
+                    )}
+                    {status === "booked" && (
+                        <button
+                            className="btn btn-sm btn-secondary">
+                            <Link
+                                to={`/reservations/${reservation_id}/edit`}
+                                style={{
+                                    textDecoration: "none",
+                                    color: "black",
+                                }}
+                            >
+                                Edit
+                            </Link>
+                        </button>
+                    )}
+                    {reservation.status !== "cancelled" && (
+                        <button
+                            className="btn btn-sm btn-danger"
+                            data-reservation-id-cancel={`${reservation_id}`}
+                            onClick={handleCancel}
                         >
-                            Seat
-                        </Link>
-                    </button>
-                )}
-                {status === "booked" && (
-                    <button>
-                        <Link
-                            to={`/reservations/${reservation_id}/edit`}
-                            style={{
-                                textDecoration: "none",
-                                color: "black",
-                            }}
-                        >
-                            Edit
-                        </Link>
-                    </button>
-                )}
-                {reservation.status !== "cancelled" && (
-                    <button
-                        data-reservation-id-cancel={`${reservation_id}`}
-                        onClick={handleCancel}
-                    >
-                        Cancel
-                    </button>
-                )}
+                            Cancel
+                        </button>
+                    )}
+                </div>
             </td>
         </>
     );

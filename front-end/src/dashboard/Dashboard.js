@@ -30,18 +30,44 @@ function Dashboard({
     return (
         <main className="container-fluid">
             <h1>Dashboard</h1>
-            <button onClick={handlePrev}>Previous Day</button>
-            <button
-                onClick={() => history.push(`/dashboard?date=${today(date)}`)}
+            <div
+                className="d-md-flex mb-3"
+                style={{
+                    disply: "flex",
+                    flexDirection: "column"
+                }}
             >
-                Today
-            </button>
-            <button onClick={handleNext}>Next Day</button>
-            <div className="d-md-flex mb-3">
-                <h4 className="mb-0">Reservations for date {date}</h4>
+                <div>
+                    <h4 className="mb-0">Reservations for date {date}</h4>
+                </div>
+                <div>
+                    <button
+                        class="btn btn-primary"
+                        style={{ margin: "0 15px 0 12px" }}
+                        onClick={handlePrev}
+                    >
+                        Previous Day
+                    </button>
+                    <button
+                        style={{ margin: "0 15px" }}
+                        class="btn btn-info"
+                        onClick={() =>
+                            history.push(`/dashboard?date=${today(date)}`)
+                        }
+                    >
+                        Today
+                    </button>
+                    <button
+                        style={{ margin: "0 15px" }}
+                        class="btn btn-primary"
+                        onClick={handleNext}
+                    >
+                        Next Day
+                    </button>
+                </div>
             </div>
             <ErrorAlert error={reservationsError} />
-            <div>
+            <div className="table-responsive">
                 <table className="table">
                     <thead className="thead-light">
                         <tr>
@@ -57,7 +83,7 @@ function Dashboard({
                     </thead>
                     <tbody>
                         {reservations.map((reservation) => (
-                            <tr key={reservation.reservation_id}>
+                            <tr key={reservation.reservation_id} style={{textAlign:"center"}}>
                                 <ReservationDisplay
                                     reservation={reservation}
                                     loadDashboard={loadDashboard}
@@ -68,7 +94,7 @@ function Dashboard({
                     </tbody>
                 </table>
             </div>
-            <div>
+            <div className="table-responsive">
                 <table className="table">
                     <thead className="thead-light">
                         <tr>

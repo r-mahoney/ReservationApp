@@ -1,22 +1,19 @@
-import React, { 
-    useEffect, 
-    useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     useHistory,
     useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
-import { 
-    readReservation, 
-    update, seatTable } from "../../utils/api";
+import { readReservation, update, seatTable } from "../../utils/api";
 import { asDateString } from "../../utils/date-time";
+import ErrorAlert from "../ErrorAlert";
 
-function View({loadDashboard, tables, reservations}) {
+function View({ loadDashboard, tables, reservations }) {
     const history = useHistory();
     const { reservationId } = useParams();
     const [reservation, setReservation] = useState({});
-    // const reservation  = reservations.find(reservation => reservation.reservation_id === Number(reservationId))
+    const [errors, setErrors] = useState([]);
+    const [APIErrors, setAPIErrors] = useState(null);
     const [tableId, setTableId] = useState();
-    const [table, setTable] = useState({});
 
     const {
         reservation_id,
@@ -29,25 +26,47 @@ function View({loadDashboard, tables, reservations}) {
     } = reservation;
     const date = asDateString(new Date(reservation_date));
 
+    function validations() {
+        const foundErrors = [];
+    
+        const foundTable = tables.find(
+          (table) => table.table_id === Number(tableId)
+        );
+    
+        if (!foundTable) {
+          foundErrors.push({message:"The table you selected does not exist."});
+        } else if (!reservation) {
+          foundErrors.push({message:"This reservation does not exist."});
+        } else {
+          if (foundTable.status !== "Free") {
+            foundErrors.push({message:"The table you selected is currently occupied"});
+          }
+          if (foundTable.capacity < people) {
+            foundErrors.push(
+              {message:`The table you selected cannot seat ${people} people.`}
+            );
+          }
+        }
+        setErrors(foundErrors);
+    
+        return foundErrors.length === 0;
+      }
+
     const handleChange = (e) => {
         setTableId(e.target.value);
-        setTable({
-            ...tables.find(
-                (table) => table.table_id === Number(e.target.value)
-            ),
-        });
-        document.getElementById("alert-Div").style.display = "none";
-        document.getElementById("alert-Div").classList.remove("alert-danger");
-        document.getElementById("alert-Div").innerHTML = "";
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const abortController = new AbortController();
-        seatTable(reservation_id, tableId, abortController.signal)
-        .then(update(reservation, "seated", abortController.signal))
-        .then(loadDashboard)
-        .then(() => history.push(`/dashboard?date=${reservation_date}`));
+        if (validations()) {
+            seatTable(reservation_id, tableId, abortController.signal)
+                .then(update(reservation, "seated", abortController.signal))
+                .then(loadDashboard)
+                .then(() => history.push("/dashboard"))
+                .catch(setAPIErrors);
+        }
+        return () => abortController.abort();
     };
 
     const handleCancel = (e) => {
@@ -67,58 +86,41 @@ function View({loadDashboard, tables, reservations}) {
 
     return (
         <>
-            <div style={{ display: "none" }} id="alert-Div" className="alert">
-                Alert
-            </div>
-            <table>
-                <thead>
+             <table className="table">
+             <thead className="thead-light">
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Mobile Number</th>
-                        <th>Reservation Date</th>
-                        <th>Reservation Time</th>
-                        <th>Party Size</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Mobile Number</th>
+                        <th scope="col">Reservation Date</th>
+                        <th scope="col">Reservation Time</th>
+                        <th scope="col">Party Size</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>{first_name}</th>
-                        <th>{last_name}</th>
-                        <th>{mobile_number}</th>
-                        <th>{date}</th>
-                        <th>{reservation_time}</th>
-                        <th>{people}</th>
+                        <td>{first_name}</td>
+                        <td>{last_name}</td>
+                        <td>{mobile_number}</td>
+                        <td>{date}</td>
+                        <td>{reservation_time}</td>
+                        <td>{people}</td>
                     </tr>
                 </tbody>
             </table>
             <div>
                 <form
                     onSubmit={(e) => {
-                        if (table.table_status !== "Free") {
-                            e.preventDefault();
-                            document
-                                .getElementById("alert-Div")
-                                .classList.add("alert-danger");
-                            document.getElementById("alert-Div").style.display =
-                                "block";
-                            document.getElementById("alert-Div").innerHTML = "Table is occupied"
-                        } else if (people > table.capacity){
-                            e.preventDefault();
-                            document
-                                .getElementById("alert-Div")
-                                .classList.add("alert-danger");
-                            document.getElementById("alert-Div").style.display =
-                                "block";
-                            document.getElementById("alert-Div").innerHTML = "Party size is too big"
-                        } else {
-                            handleSubmit(e);
-                        }
+                        handleSubmit(e);
                     }}
                 >
+                    <div>
+                        {errors.map((error, id) => <ErrorAlert key={id} error={error} />)}
+                        <ErrorAlert error={APIErrors} />
+                    </div>
                     <label>
                         Select a Table
-                        <select name="table_id" onChange={handleChange}>
+                        <select className="custom-select" name="table_id" onChange={handleChange}>
                             <option value="">--Select A Table--</option>
                             {tables.map((table) => {
                                 return (
@@ -132,8 +134,8 @@ function View({loadDashboard, tables, reservations}) {
                             })}
                         </select>
                     </label>
-                    <button type="submit">Submit</button>
-                    <button type="button" onClick={handleCancel}>
+                    <button className="btn btn-primary" type="submit">Submit</button>
+                    <button className="btn btn-secondary" type="button" onClick={handleCancel}>
                         Cancel
                     </button>
                 </form>
