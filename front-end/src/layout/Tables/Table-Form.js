@@ -32,17 +32,19 @@ function TableForm({ loadDashboard }) {
     function validations() {
         const foundErrors = [];
         if (formData.table_name.length < 2) {
-            foundErrors.push({message:"Table name must be longer than 2 characters"});
+            foundErrors.push({
+                message: "Table name must be longer than 2 characters",
+            });
         }
         if (isNaN(formData.capacity)) {
-            foundErrors.push(
-                {message: "Table capacity must be an integer greater than 0"}
-            );
+            foundErrors.push({
+                message: "Table capacity must be an integer greater than 0",
+            });
         }
-        if (formData.capacity <=0 ) {
-            foundErrors.push(
-                {message: "Table capacity must be an integer greater than 0"}
-            );
+        if (formData.capacity <= 0) {
+            foundErrors.push({
+                message: "Table capacity must be an integer greater than 0",
+            });
         }
         setErrors(foundErrors);
         return foundErrors.length === 0;
@@ -99,19 +101,14 @@ function TableForm({ loadDashboard }) {
                     </label>
                 </div>
                 <div>
-                <button
-                    className="btn btn-primary"
-                    type="submit"
-                >
-                    Submit
-                </button>
-                <button
-                    className="btn btn-secondary"
-                    type="button"
-                    onClick={handleCancel}
-                >
-                    Cancel
-                </button>
+                    <button className="btn btn-primary" type="submit">
+                        Submit
+                    </button>
+                    <button
+                        className="btn btn-secondary"
+                        type="button"
+                        onClick={handleCancel}
+                    >
                         Cancel
                     </button>
                 </div>
