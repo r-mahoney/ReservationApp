@@ -4,10 +4,13 @@ import {
     useHistory,
     useRouteMatch,
 } from "react-router-dom/cjs/react-router-dom.min";
+import ErrorAlert from "../ErrorAlert";
 
 function Form({ reservation, date, loadDashboard }) {
     const today = new Date();
     const { path } = useRouteMatch();
+    const [errors, setErrors] = useState([]);
+    const [APIErrors, setAPIErrors] = useState(null);
     const time =
         today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const initialState = path.includes("edit")
@@ -41,12 +44,44 @@ function Form({ reservation, date, loadDashboard }) {
             ...formData,
             [e.target.name]: value,
         });
-        document.getElementById("alert-Div").style.display = "none";
-        document.getElementById("alert-Div").classList.remove("alert-danger");
-        document.getElementById("alert-Div").innerHTML = "";
     };
 
     let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"));
+
+    function validations() {
+        const foundErrors = [];
+
+        if (reservationDay.getDay() === 2) {
+            foundErrors.push({ message: "Restaraunt is closed on Tuesdays" });
+        }
+        if (
+            new Date(
+                formData.reservation_date + " " + formData.reservation_time
+            ) < new Date(date + " " + time)
+        ) {
+            foundErrors.push({
+                message: "Reservation can not be in the past.",
+            });
+        }
+        if (
+            new Date(
+                formData.reservation_date + " " + formData.reservation_time
+            ) < new Date(`${formData.reservation_date} 10:30`)
+        ) {
+            foundErrors.push({ message: "Reservation must be after 10:30 AM" });
+        }
+        if (
+            new Date(
+                formData.reservation_date + " " + formData.reservation_time
+            ) > new Date(`${formData.reservation_date} 21:30`)
+        ) {
+            foundErrors.push({ message: "Reservation must be before 9:30 PM" });
+        }
+
+        setErrors(foundErrors);
+
+        return foundErrors.length === 0;
+    }
 
     const handleCancel = () => {
         history.push(`/dashboard`);
@@ -56,63 +91,47 @@ function Form({ reservation, date, loadDashboard }) {
         e.preventDefault();
         const abortController = new AbortController();
 
-        path.includes("edit")
-            ? update(
-                  { ...reservation, ...formData },
-                  "booked",
-                  abortController.signal
-              )
-                  .then(loadDashboard)
-                  .then(() => setFormData({ ...initialState }))
-                  .then(() =>
-                      history.push(
-                          `/dashboard?date=${formData.reservation_date}`
-                      )
+        if (validations()) {
+            path.includes("edit")
+                ? update(
+                      { ...reservation, ...formData },
+                      "booked",
+                      abortController.signal
                   )
-            : createReservation(formData, abortController.signal)
-                  .then(loadDashboard)
-                  .then(() => setFormData({ ...initialState }))
-                  .then(() =>
-                      history.push(
-                          `/dashboard?date=${formData.reservation_date}`
+                      .then(loadDashboard)
+                      .then(() => setFormData({ ...initialState }))
+                      .then(() =>
+                          history.push(
+                              `/dashboard?date=${formData.reservation_date}`
+                          )
                       )
-                  );
+                      .catch(setAPIErrors)
+                : createReservation(formData, abortController.signal)
+                      .then(loadDashboard)
+                      .then(() => setFormData({ ...initialState }))
+                      .then(() =>
+                          history.push(
+                              `/dashboard?date=${formData.reservation_date}`
+                          )
+                      )
+                      .catch(APIErrors);
+        }
+        return () => abortController.abort();
     };
+
     return (
         <form
             style={{ width: "50%" }}
             onSubmit={(e) => {
-                if (
-                    reservationDay.getDay() === 2 ||
-                    new Date(
-                        formData.reservation_date +
-                            " " +
-                            formData.reservation_time
-                    ) < new Date(date + " " + time) ||
-                    new Date(
-                        formData.reservation_date +
-                            " " +
-                            formData.reservation_time
-                    ) < new Date(`${formData.reservation_date} 10:30`) ||
-                    new Date(
-                        formData.reservation_date +
-                            " " +
-                            formData.reservation_time
-                    ) > new Date(`${formData.reservation_date} 21:30`)
-                ) {
-                    e.preventDefault();
-                    document
-                        .getElementById("alert-Div")
-                        .classList.add("alert-danger");
-                    document.getElementById("alert-Div").style.display =
-                        "block";
-                    document.getElementById("alert-Div").innerHTML =
-                        "Cannot set reservation";
-                } else {
-                    handleSubmit(e);
-                }
+                handleSubmit(e);
             }}
         >
+            <div>
+                {errors.map((error, idx) => (
+                    <ErrorAlert error={error} key={idx} />
+                ))}
+                <ErrorAlert error={APIErrors} />
+            </div>
             <div
                 style={{ display: "flex", flexDirection: "column" }}
                 className="form-group"
@@ -192,8 +211,17 @@ function Form({ reservation, date, loadDashboard }) {
                 </label>
             </div>
             <div>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={handleCancel}>
+                <button
+                    className="btn btn-primary"
+                    type="submit"
+                >
+                    Submit
+                </button>
+                <button
+                    className="btn btn-secondary"
+                    type="button"
+                    onClick={handleCancel}
+                >
                     Cancel
                 </button>
             </div>
