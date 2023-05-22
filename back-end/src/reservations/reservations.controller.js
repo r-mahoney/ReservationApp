@@ -30,18 +30,23 @@ function futureDate(req, res, next) {
     const date = asDateString(today);
     const time =
         today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const check1 = new Date(reservation_date + " " + reservation_time);
+    const check2 = new Date(date + " " + time);
     const {
         data: { reservation_date, reservation_time, status },
     } = req.body;
 
     if (
         new Date(reservation_date + " " + reservation_time) <
-            new Date(date + " " + time)
+        new Date(date + " " + time)
     ) {
-        console.log(new Date(reservation_date + " " + reservation_time), new Date(date + " " + time))
+        console.log(
+            new Date(reservation_date + " " + reservation_time),
+            new Date(date + " " + time)
+        );
         next({
             status: 400,
-            message: "Date must be in the future",
+            message: `Date must be in the future. res: ${check1} today: ${check2}`,
         });
     }
     next();
