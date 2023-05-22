@@ -33,14 +33,16 @@ function futureDate(req, res, next) {
     const {
         data: { reservation_date, reservation_time, status },
     } = req.body;
+    const check1 = new Date(reservation_date + " " + reservation_time);
+    const check2 = new Date(date + " " + time);
 
     if (
-        !status && new Date(reservation_date + " " + reservation_time) <
+        new Date(reservation_date + " " + reservation_time) <
         new Date(date + " " + time)
     ) {
         next({
             status: 400,
-            message: `Date must be in the future.`,
+            message: `Date must be in the future. res: ${check1} today: ${check2}`,
         });
     }
     next();
