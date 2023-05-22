@@ -99,8 +99,19 @@ function TableForm({ loadDashboard }) {
                     </label>
                 </div>
                 <div>
-                    <button type="submit">Submit</button>
-                    <button type="button" onClick={handleCancel}>
+                <button
+                    className="btn btn-primary"
+                    type="submit"
+                >
+                    Submit
+                </button>
+                <button
+                    className="btn btn-secondary"
+                    type="button"
+                    onClick={handleCancel}
+                >
+                    Cancel
+                </button>
                         Cancel
                     </button>
                 </div>

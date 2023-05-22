@@ -24,7 +24,7 @@ function Search() {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        loadSearchResults()
+        loadSearchResults();
         // setFormData({ ...initialFormData });
     };
     const handleChange = (e) => {
@@ -37,17 +37,25 @@ function Search() {
         <>
             <div>
                 <h1>Search for Reservation</h1>
-                {changed && foundReservations.length < 1 && <div
-                    style={{ display: "block" }}
-                    id="alert-Div"
-                    className="alert alert-danger"
-                >
-                    No reservations found
-                </div>}
+                {changed && foundReservations.length < 1 && (
+                    <div
+                        style={{ display: "block" }}
+                        id="alert-Div"
+                        className="alert alert-danger"
+                    >
+                        No reservations found
+                    </div>
+                )}
                 <form onSubmit={handleSubmit}>
-                <label style={{"display":"flex", "flexDirection":"column"}}>
+                    <label style={{ display: "flex", flexDirection: "column" }}>
                         Search for Reservation
-                        <div style={{ display: "flex", flexDirection: "row", "width":"50%"}}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                width: "50%",
+                            }}
+                        >
                             <input
                                 type="text"
                                 name="mobile_number"
@@ -56,7 +64,11 @@ function Search() {
                                 style={{ display: "flex", width: "100%" }}
                                 onChange={handleChange}
                             ></input>
-                            <button style={{ marginLeft: "5px" }} type="submit">
+                            <button
+                                style={{ marginLeft: "5px" }}
+                                className="btn btn-primary"
+                                type="submit"
+                            >
                                 Find
                             </button>
                         </div>
