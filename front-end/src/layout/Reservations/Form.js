@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { createReservation, update } from "../../utils/api";
 import {
-    useHistory,
-    useRouteMatch,
+  useHistory,
+  useRouteMatch,
 } from "react-router-dom/cjs/react-router-dom.min";
 import ErrorAlert from "../ErrorAlert";
 
@@ -32,8 +32,9 @@ function Form({ reservation, date, loadDashboard }) {
               people: "0",
           };
 
-    const [formData, setFormData] = useState({ ...initialState });
-    const history = useHistory();
+
+  const [formData, setFormData] = useState({ ...initialState });
+  const history = useHistory();
 
     const handleChange = (e) => {
         const value =
@@ -46,7 +47,8 @@ function Form({ reservation, date, loadDashboard }) {
         });
     };
 
-    let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"));
+
+  let reservationDay = new Date(formData.reservation_date.replace(/-/g, "/"));
 
     function validations() {
         const foundErrors = [];
@@ -87,9 +89,10 @@ function Form({ reservation, date, loadDashboard }) {
         history.push(`/dashboard`);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const abortController = new AbortController();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const abortController = new AbortController();
 
         if (validations()) {
             path.includes("edit")
@@ -227,6 +230,7 @@ function Form({ reservation, date, loadDashboard }) {
             </div>
         </form>
     );
+
 }
 
 export default Form;
