@@ -42,7 +42,7 @@ function Dashboard({
                 </div>
                 <div>
                     <button
-                        class="btn btn-primary"
+                        className="btn btn-primary"
                         style={{ margin: "0 15px 0 12px" }}
                         onClick={handlePrev}
                     >
@@ -50,7 +50,7 @@ function Dashboard({
                     </button>
                     <button
                         style={{ margin: "0 15px" }}
-                        class="btn btn-info"
+                        className="btn btn-info"
                         onClick={() =>
                             history.push(`/dashboard?date=${today(date)}`)
                         }
@@ -59,7 +59,7 @@ function Dashboard({
                     </button>
                     <button
                         style={{ margin: "0 15px" }}
-                        class="btn btn-primary"
+                        className="btn btn-primary"
                         onClick={handleNext}
                     >
                         Next Day

@@ -35,10 +35,10 @@ function futureDate(req, res, next) {
     } = req.body;
 
     if (
-        !status &&
         new Date(reservation_date + " " + reservation_time) <
             new Date(date + " " + time)
     ) {
+        console.log(new Date(reservation_date + " " + reservation_time), new Date(date + " " + time))
         next({
             status: 400,
             message: "Date must be in the future",
